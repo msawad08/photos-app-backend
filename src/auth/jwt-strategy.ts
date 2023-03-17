@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import {sign} from "jsonwebtoken"
- import {User} from '../user/user.model'; 
+ import {User} from '../app/user.model'; 
  import { Request } from 'express';
 
 
