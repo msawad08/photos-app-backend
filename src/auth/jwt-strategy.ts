@@ -7,13 +7,10 @@ import {sign} from "jsonwebtoken"
 
 var cookieExtractor = function(req: Request) {
   var token = null;
-  // console.log(req);
 
   if (req && req.cookies)
   {
-      console.log(req.cookies);
       token = req.cookies['accessToken'];
-      console.log(req.cookies, token);
 
   }
   return token;
@@ -28,9 +25,6 @@ const jwtOptions = {
 // Create JWT strategy
 const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
   try {
-    console.log(payload);
-    // Find the user associated with the token
-    // const user = await User.findById(payload.sub);
 
     // If user not found, return error
     if (!payload.email) {
@@ -44,7 +38,7 @@ const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
   }
 });
 
-export function generateToken(user: User) {
+export function generateToken(user: {email: string} ) {
     const jwtPayload = { email: user.email };
     const jwtOptions = { expiresIn: '1d' };
     return sign(jwtPayload, 'your_secret_key_here', jwtOptions);

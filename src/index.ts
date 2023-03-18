@@ -1,19 +1,29 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
 import loginRoutes from './auth/auth';
 import appRoutes from './app/app';
 import { authMiddleware } from './auth/jwt-strategy';
+import { initialiseDatabase } from './db';
+import { errorHandlerMiddleware } from './utils/error-handler';
+import { initialiseGoogleStorage } from './utils/gcloud-storage';
 
 
 dotenv.config();
 
+initialiseGoogleStorage();
+
+
 const app: Express = express();
 const port = process.env.PORT ?? 8000;
 
+initialiseDatabase();
+
 app.use(bodyParser.json())
 app.use(cookieParser());
+
+app.use(errorHandlerMiddleware);
 
 
 // app.get('/', (req: Request, res: Response) => {

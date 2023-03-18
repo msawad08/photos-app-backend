@@ -4,10 +4,12 @@
 /node_modules
 /.pnp
 
+# git
+/.git
 
-# production
-/dist
-/config
+
+# source
+/src
 
 # misc
 .DS_Store
@@ -15,6 +17,6 @@
 .env.development.local
 .env.test.local
 .env.production.local
-app.yaml
 npm-debug.log*
-
+.gitignore
+tscongig.json
