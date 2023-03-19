@@ -17,44 +17,50 @@ var cookieExtractor = function(req: Request) {
   return token;
 };
 
-// Set up options for JWT strategy
-const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-  secretOrKey: process.env.JWT_SECRET || "your_secret_key_here",
-};
+export const initiasePassport = function(){
+  // Set up options for JWT strategy
+  const jwtOptions = {
+    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    secretOrKey: process.env.JWT_SECRET,
+  };
 
 // Create JWT strategy
-const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
-  try {
+  const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
+    try {
 
-    if (!payload.email) {
-      return done(null, false);
+      if (!payload.email) {
+        return done(null, false);
+      }
+
+      const user = await verifyUser(payload.email);
+
+      if (!user) {
+        return done(null, false);
+      }
+
+      // Otherwise, return user
+      done(null, user);
+    } catch (err) {
+      done(err, false);
     }
+  });
 
-    const user = await verifyUser(payload.email);
+  passport.use(jwtStrategy);
 
-    if (!user) {
-      return done(null, false);
-    }
+}
 
-    // Otherwise, return user
-    done(null, user);
-  } catch (err) {
-    done(err, false);
-  }
-});
+
 
 export function generateToken(user: {email: string} ) {
     const jwtPayload = { email: user.email };
     const jwtOptions = { expiresIn: '1d' };
-    return sign(jwtPayload, 'your_secret_key_here', jwtOptions);
+    return sign(jwtPayload, process.env.JWT_SECRET??"", jwtOptions);
 }
 
 export const authMiddleware = passport.authenticate('jwt', { session: false });
 
 
 // Use the strategy
-passport.use(jwtStrategy);
 
 // Export the Passport module
 export  {passport};
