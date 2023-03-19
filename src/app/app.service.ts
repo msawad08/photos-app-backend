@@ -17,7 +17,7 @@ function queryDataFromPagination({
 const comparePassword = (user: IUser, password: string) =>
   user.password &&  bcrypt.compare(password, user.password);
 
-export const verifyUser = async function ({ email, password }: LoginDTO) {
+export const verifyCredential = async function ({ email, password }: LoginDTO) {
   try {
     const user = await User.findOne({ email }).select('+password').exec();
     if (user && (await comparePassword(user, password))) {
@@ -28,6 +28,18 @@ export const verifyUser = async function ({ email, password }: LoginDTO) {
     return { error: err, status: 500 };
   }
 };
+
+export const verifyUser = async function (email: string) {
+    try {
+      const user = await User.findOne({ email }).exec();
+      if (user) {
+        return user;
+      }
+      return { error: "Data Not Found", status: 404 };
+    } catch (err) {
+      return { error: err, status: 500 };
+    }
+  };
 
 export const getAllUsers = async function (params: PaginationParam) {
   try {

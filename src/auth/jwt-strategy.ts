@@ -3,6 +3,7 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import {sign} from "jsonwebtoken"
  import {User} from '../app/user.model'; 
  import { Request } from 'express';
+import { verifyUser } from '../app/app.service';
 
 
 var cookieExtractor = function(req: Request) {
@@ -26,13 +27,18 @@ const jwtOptions = {
 const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
   try {
 
-    // If user not found, return error
     if (!payload.email) {
       return done(null, false);
     }
 
+    const user = await verifyUser(payload.email);
+
+    if (!user) {
+      return done(null, false);
+    }
+
     // Otherwise, return user
-    done(null, payload);
+    done(null, user);
   } catch (err) {
     done(err, false);
   }
