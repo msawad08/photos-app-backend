@@ -5,7 +5,7 @@ import {sign} from "jsonwebtoken"
  import { Request } from 'express';
 import { verifyUser } from '../app/app.service';
 
-
+/// removed because could'nt use because of https requirement for not same site 
 var cookieExtractor = function(req: Request) {
   var token = null;
 
@@ -20,7 +20,7 @@ var cookieExtractor = function(req: Request) {
 export const initiasePassport = function(){
   // Set up options for JWT strategy
   const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
   };
 

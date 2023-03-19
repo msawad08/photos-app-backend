@@ -17,7 +17,7 @@ router.post("/",makeValidateBody(LoginDTO), async function(req: Request, res: Re
     const token = generateToken(data as IUser); 
     const {email, name, username} = (data as IUser);
 
-    res.cookie("accessToken", token,{httpOnly: true, sameSite: true}).json({email, name, username});
+    res.cookie("accessToken", token,{httpOnly: true, sameSite: false, secure: true}).json({email, name, username, token});
 
 })
 
