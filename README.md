@@ -36,10 +36,17 @@ This endpoint is used to retrieve all users, with pagination options "page" && "
 
 This endpoint is used to retrieve all photos, with pagination query param "page" && "rowsPerPage"
 
-Both user and photo api protected by authentication
+### Both user and photo api protected by authentication
 ##### Request Headers
 ```
 {
 "Authorization": "Bearer <access_token>"
 }
 ```
+
+## Technologies Used
+
+- Node.js
+- Express.js
+- MongoDB
+- JWT for authentication
